@@ -1,87 +1,122 @@
 const $btn = document.querySelector('#btn-kick');
 const $btnVolt = document.querySelector('#btn-volt');
 
+const randomNumber = 20;
+const critHitNumber = 39;
+const defaultHP = 100;
+const demageHP = 100;
+
 const character = {
   name: 'Pikachu',
-  defaultHP: 100,
-  demageHP: 100,
+  defaultHP,
+  demageHP,
   elHP: document.querySelector('#health-character'),
-  elProgressBar: document.querySelector('#progressbar-character')
+  elProgressBar: document.querySelector('#progressbar-character'),
+  renderHPLife,
+  changeHP,
+  finalBlow,
+  renderProgressBar,
+  kritPanchButtonActiv
 }
 
 const enemy = {
   name: 'Charmander',
-  defaultHP: 100,
-  demageHP: 100,
+  defaultHP,
+  demageHP,
   elHP: document.querySelector('#health-enemy'),
-  elProgressBar: document.querySelector('#progressbar-enemy')
+  elProgressBar: document.querySelector('#progressbar-enemy'),
+  renderHPLife,
+  changeHP,
+  finalBlow,
+  renderProgressBar,
+  kritPanchButtonActiv
 }
 
+// *********** Кнопка основного удара ***********
 $btn.addEventListener('click', function () {
   console.log('click');
-  changeHP(random(20), character);
-  changeHP(random(20), enemy);
+  character.changeHP(random(randomNumber));
+  enemy.changeHP(random(randomNumber));
+
+  character.kritPanchButtonActiv(critHitNumber);
+  enemy.kritPanchButtonActiv(critHitNumber);
 });
 
 // *********** Новая кнопка ***********
 $btnVolt.addEventListener('click', function () {
-  console.log('krit');
-  finalBlow(39, character);
-  finalBlow(39, enemy);
+  character.finalBlow(critHitNumber);
+  enemy.finalBlow(critHitNumber);
 });
 
 //*********** init app ***********
 function init () {
   console.log('Start Game!');
+  $btnVolt.disabled = true; // Блокируем кнопку крит удара!
 
-  renderHPLife(character);
-  renderProgressBar(character);
+  character.renderHPLife();
+  character.renderProgressBar();
   
-  renderHPLife(enemy);
-  renderProgressBar(enemy);
+  enemy.renderHPLife();
+  enemy.renderProgressBar();
 }
 
-function renderHP (person) {
-  renderHPLife(person);
-  renderProgressBar(person);
+// правда в этом блоке пришлось вызвать несколько раз функцию, но
+// за то на this.
+function renderHP () {
+  character.renderHPLife();
+  enemy.renderHPLife();
+
+  character.renderProgressBar();
+  enemy.renderProgressBar();
 }
 
-function renderHPLife (person) {
-  person.elHP.innerText = person.demageHP + ' / ' + person.defaultHP;
+function renderHPLife () {
+  this.elHP.innerText = this.demageHP + ' / ' + this.defaultHP;
 }
 
-function renderProgressBar (person) {
-  person.elProgressBar.style.width = person.demageHP + '%';
+function renderProgressBar () {
+  this.elProgressBar.style.width = this.demageHP + '%';
 }
 
-function changeHP (count, person) {
-  if (person.demageHP < count) {
-    person.defaultHP = 0;
-    alert('Бедный ' + person.name + ' проиграл бой!');
+function changeHP (count) {
+  if (this.demageHP < count) {
+    this.defaultHP = 0;
+    alert('Бедный ' + this.name + ' проиграл бой!');
     $btn.disabled = true;
   } else {
-    person.demageHP -= count;
+    this.demageHP -= count;
   }
 
-  renderHP(person);
+  renderHP();
 }
 
 // ********** Функция критического удара **********
-function finalBlow (count ,person) {
-  if (person.demageHP < count) {
-    person.demageHP = 0;
-    $btnVolt.disabled = true;
+function finalBlow (count) {
+
+  if (this.demageHP <= count) {
+    this.demageHP = 0;
     $btn.disabled = true;
+    $btnVolt.disabled = true;
+    alert(this.name + ' Получил Критический удар!')
+  }
+
+  renderHP();
+}
+
+// ********** Функция вешает стили на коку и активирует ее когда можно применить критический удар **********
+function kritPanchButtonActiv (count) {
+  
+  if (this.demageHP <= count) {
+
+    alert('Можно применить Сritical Hit => ' + this.name)
+    $btnVolt.disabled = false;
     $btnVolt.style.background = '#ff0000';
     $btnVolt.style.color = '#ffffff';
   }
-
-  renderHP(person);
 }
 
 function random (num) {
   return Math.ceil(Math.random() * num);
 }
-
 
 init();

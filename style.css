@@ -304,6 +304,10 @@ body {
     background: linear-gradient(to bottom, #ffd78e, #ffc55b);
     box-shadow: 0 0 5px 2px white, 0 0 15px #ffe9c1, 0 3px 5px -2px rgba(0, 0, 0, 0.2);
 }
+.button:active {
+    background: linear-gradient(to bottom, #c5a974, #e6b863);
+    border-color: white;
+}
 
 .candy {
     display: block;
