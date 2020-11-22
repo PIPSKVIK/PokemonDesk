@@ -485,14 +485,29 @@ h1 {
 
 .logs {
     max-width: 600px;
+    height: 250px;
     margin: 30px auto;
-    background: rgba(47, 82, 236, 0.5);
+    background: rgba(47, 82, 236, 0.3);
     color: white;
+    overflow: auto;
+    position: relative;
+}
+
+.logs::before {
+    content: 'Лог Боя';
+    position: absolute;
+    top: 0;
+    right: 10px;
+    color: #073fa7;
+    font-size: 20px;
+    font-weight: bold;
+    font-style: italic;
 }
 
 .logs__text {
+    font-size: 12px;
     margin: 5px 0;
     padding: 5px;
     text-align: start;
-    background: rgba(47, 82, 236, 0.3);
+    background: rgba(47, 82, 236, 0.5);
 }

@@ -6,7 +6,7 @@ const $btnVolt = $querySelector('#btn-volt');
 const $logs = document.querySelector('#logs');
 
 const randomNumber = 20;
-const critHitNumber = 39;
+const critHitNumber = 29;
 const defaultHP = 100;
 const demageHP = 100;
 
@@ -41,8 +41,8 @@ const enemy = {
 
 // *********** События ***********
 $btn.addEventListener('click', function () {
-  character.changeHP(random(20));
-  enemy.changeHP(random(20));
+  character.changeHP(random(randomNumber));
+  enemy.changeHP(random(randomNumber));
 
   character.kritPanchButtonActiv(critHitNumber);
   enemy.kritPanchButtonActiv(critHitNumber);
@@ -88,7 +88,6 @@ function changeHP (count) {
   this.demageHP -= count;
 
   const log = this === enemy ? generateLog(this, character, count) : generateLog(this, enemy, count);
-  console.log(log);
   renderLogs(log);
 
   if (this.demageHP <= count) {
@@ -101,12 +100,13 @@ function changeHP (count) {
 
 // ********** Функция критического удара **********
 function finalBlow (count) {
+  const finalBlowText = this.name + ' Получил Критический удар!';
 
   if (this.demageHP <= count) {
     this.demageHP = 0;
     $btn.disabled = true;
     $btnVolt.disabled = true;
-    alert(this.name + ' Получил Критический удар!')
+    renderLogs(finalBlowText);
   }
 
   renderHP();
@@ -114,10 +114,10 @@ function finalBlow (count) {
 
 // ********** Функция вешает стили на коку и активирует ее когда можно применить критический удар **********
 function kritPanchButtonActiv (count) {
-  
-  if (this.demageHP <= count) {
+  const kritPanchLogMessage = 'Можно применить Сritical Hit => ' + this.name;
 
-    alert('Можно применить Сritical Hit => ' + this.name)
+  if (this.demageHP <= count) {
+    renderLogs(kritPanchLogMessage);
     $btnVolt.disabled = false;
     $btnVolt.style.background = '#ff0000';
     $btnVolt.style.color = '#ffffff';
@@ -127,7 +127,6 @@ function kritPanchButtonActiv (count) {
 function random (num) {
   return Math.ceil(Math.random() * num);
 }
-
 
 
 function generateLog (firstPerson, secondPerson, demage) {
@@ -192,7 +191,7 @@ const renderLogs = function (log) {
   for (let i = 0; i < 1; i++) {
     const $p = document.createElement('p');
     $p.classList.add('logs__text')
-    $p.innerText = `[#${i}] - ${log}`;
+    $p.innerText = `${log}`;
     $logs.insertBefore($p, $logs.children[0]);
   }
 }
