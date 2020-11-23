@@ -304,6 +304,10 @@ body {
     background: linear-gradient(to bottom, #ffd78e, #ffc55b);
     box-shadow: 0 0 5px 2px white, 0 0 15px #ffe9c1, 0 3px 5px -2px rgba(0, 0, 0, 0.2);
 }
+.button:active {
+    background: linear-gradient(to bottom, #c5a974, #e6b863);
+    border-color: white;
+}
 
 .candy {
     display: block;
@@ -475,4 +479,35 @@ h1 {
 
 .action label {
     padding: 6px 0;
+}
+
+/* Мои стили */
+
+.logs {
+    max-width: 600px;
+    height: 250px;
+    margin: 30px auto;
+    background: rgba(47, 82, 236, 0.3);
+    color: white;
+    overflow: auto;
+    position: relative;
+}
+
+.logs::before {
+    content: 'Лог Боя';
+    position: absolute;
+    top: 0;
+    right: 10px;
+    color: #073fa7;
+    font-size: 20px;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.logs__text {
+    font-size: 12px;
+    margin: 5px 0;
+    padding: 5px;
+    text-align: start;
+    background: rgba(47, 82, 236, 0.5);
 }
