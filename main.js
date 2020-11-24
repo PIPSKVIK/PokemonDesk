@@ -5,8 +5,8 @@ const $btn = $querySelector('#btn-kick');
 const $btnVolt = $querySelector('#btn-volt');
 const $logs = document.querySelector('#logs');
 
-const randomNumber = 20;
-const critHitNumber = 29;
+const randomNumber = 12;
+const critHitNumber = 30;
 const defaultHP = 100;
 const demageHP = 100;
 
@@ -38,6 +38,31 @@ const enemy = {
   kritPanchButtonActiv
 }
 
+// *********** HomeWork-4 ***********
+
+function clickListener () {
+  let counter = 0;
+
+  return (kickLimit = 100, btn) => {
+    counter++;
+    console.log(`click: ${counter}`);
+
+    if (counter >= kickLimit) {
+      console.log('STOP');
+      btn.disabled = true;
+    }
+  }
+}
+
+// функция обратного отсчета кликов по кнопке удара Jolt.
+let reversCountJolt = 10;
+function myFunction () {
+  reversCountJolt -= 1;
+  $btn.innerText = reversCountJolt;
+};
+
+const countListenerJolt = clickListener();
+const countListenerHit = clickListener();
 
 // *********** События ***********
 $btn.addEventListener('click', function () {
@@ -46,11 +71,16 @@ $btn.addEventListener('click', function () {
 
   character.kritPanchButtonActiv(critHitNumber);
   enemy.kritPanchButtonActiv(critHitNumber);
+
+  countListenerJolt(10, $btn);
+  myFunction();
 });
 
 $btnVolt.addEventListener('click', function () {
   character.finalBlow(critHitNumber);
   enemy.finalBlow(critHitNumber);
+
+  countListenerHit(3, $btnVolt);
 });
 
 
@@ -81,6 +111,13 @@ function renderHPLife () {
 
 function renderProgressBar () {
   this.elProgressBar.style.width = this.demageHP + '%';
+  if (this.demageHP <= 80) {
+    this.elProgressBar.classList.add('low');
+  }
+
+  if (this.demageHP <= 29) {
+    this.elProgressBar.classList.add('critical');
+  }
 }
 
 
@@ -103,10 +140,12 @@ function finalBlow (count) {
   const finalBlowText = this.name + ' Получил Критический удар!';
 
   if (this.demageHP <= count) {
-    this.demageHP = 0;
-    $btn.disabled = true;
-    $btnVolt.disabled = true;
+    this.demageHP -= 10;
     renderLogs(finalBlowText);
+  }
+  if (this.demageHP <= 0) {
+    this.demageHP = 0;
+    $btnVolt.disabled = true;
   }
 
   renderHP();
