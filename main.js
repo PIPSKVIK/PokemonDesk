@@ -58,7 +58,8 @@ function clickListener () {
 let reversCountJolt = 10;
 function myFunction () {
   reversCountJolt -= 1;
-  $btn.innerText = reversCountJolt;
+  let $btnRenderSkill = document.querySelector('.button__count-skill'); 
+  $btnRenderSkill.innerText = `[${reversCountJolt}]`;
 };
 
 const countListenerJolt = clickListener();
