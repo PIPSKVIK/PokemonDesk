@@ -55,12 +55,19 @@ function clickListener () {
 }
 
 // функция обратного отсчета кликов по кнопке удара Jolt.
-let reversCountJolt = 10;
-function myFunction () {
+let reversCountJolt = 12;
+function renderReversCountJolt () {
   reversCountJolt -= 1;
   let $btnRenderSkill = document.querySelector('.button__count-skill'); 
-  $btnRenderSkill.innerText = `[${reversCountJolt}]`;
+  $btnRenderSkill.innerText = `${reversCountJolt}`;
 };
+
+let reverseCountHit = 3;
+function renderReverseCountHit () {
+  reverseCountHit -= 1;
+  let $btnRenderSkill = document.querySelector('.button__volt-count')
+  $btnRenderSkill.innerText = `${reverseCountHit}`
+}
 
 const countListenerJolt = clickListener();
 const countListenerHit = clickListener();
@@ -73,8 +80,8 @@ $btn.addEventListener('click', function () {
   character.kritPanchButtonActiv(critHitNumber);
   enemy.kritPanchButtonActiv(critHitNumber);
 
-  countListenerJolt(10, $btn);
-  myFunction();
+  countListenerJolt(12, $btn);
+  renderReversCountJolt();
 });
 
 $btnVolt.addEventListener('click', function () {
@@ -82,6 +89,7 @@ $btnVolt.addEventListener('click', function () {
   enemy.finalBlow(critHitNumber);
 
   countListenerHit(3, $btnVolt);
+  renderReverseCountHit();
 });
 
 
