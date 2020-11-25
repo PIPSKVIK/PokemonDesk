@@ -3,12 +3,18 @@ function $querySelector (value) {
 }
 const $btn = $querySelector('#btn-kick');
 const $btnVolt = $querySelector('#btn-volt');
-const $logs = document.querySelector('#logs');
+const $logs = $querySelector('#logs');
+const $btnRenderSkillJolt = $querySelector('.button__count-skill');
+const $btnRenderSkillHit = $querySelector('.button__volt-count')
+const $btnRessetGame = $querySelector('#btn-resset');
 
 const randomNumber = 12;
 const critHitNumber = 30;
 const defaultHP = 100;
 const demageHP = 100;
+
+const thunderJoltMaxClick = 12;
+const criticalHitMexClick = 3;
 
 
 //********** Герои **********
@@ -54,20 +60,16 @@ function clickListener () {
   }
 }
 
-// функция обратного отсчета кликов по кнопке удара Jolt.
-let reversCountJolt = 12;
-function renderReversCountJolt () {
-  reversCountJolt -= 1;
-  let $btnRenderSkill = document.querySelector('.button__count-skill'); 
-  $btnRenderSkill.innerText = `${reversCountJolt}`;
-};
-
-let reverseCountHit = 3;
-function renderReverseCountHit () {
-  reverseCountHit -= 1;
-  let $btnRenderSkill = document.querySelector('.button__volt-count')
-  $btnRenderSkill.innerText = `${reverseCountHit}`
+function renderButtonСountdown (number, element) {
+  let count = number;
+  return function () {
+    count -= 1;
+    element.innerText = `${count}`;
+  }
 }
+
+const renderButtonСountdownJolt = renderButtonСountdown(thunderJoltMaxClick, $btnRenderSkillJolt);
+const renderButtonCountdownHit = renderButtonСountdown(criticalHitMexClick, $btnRenderSkillHit);
 
 const countListenerJolt = clickListener();
 const countListenerHit = clickListener();
@@ -80,16 +82,16 @@ $btn.addEventListener('click', function () {
   character.kritPanchButtonActiv(critHitNumber);
   enemy.kritPanchButtonActiv(critHitNumber);
 
-  countListenerJolt(12, $btn);
-  renderReversCountJolt();
+  countListenerJolt(thunderJoltMaxClick, $btn);
+  renderButtonСountdownJolt();
 });
 
 $btnVolt.addEventListener('click', function () {
   character.finalBlow(critHitNumber);
   enemy.finalBlow(critHitNumber);
 
-  countListenerHit(3, $btnVolt);
-  renderReverseCountHit();
+  countListenerHit(criticalHitMexClick, $btnVolt);
+  renderButtonCountdownHit();
 });
 
 
@@ -116,6 +118,13 @@ function renderHP () {
 
 function renderHPLife () {
   this.elHP.innerText = this.demageHP + ' / ' + this.defaultHP;
+  if (this.demageHP <= 80) {
+    this.elHP.style.color = '#ffcc00';
+  }
+
+  if (this.demageHP <= 29) {
+    this.elHP.style.color = '#d20000';
+  }
 }
 
 function renderProgressBar () {
