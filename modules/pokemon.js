@@ -73,11 +73,9 @@ class Pokemon extends Selectors {
   }
 
     finalBlow = (count, btn) => {
-    // const finalBlowText = this.name + ' Получил Критический удар!';
 
     if (this.hp.current <= count) {
       this.hp.current -= 10;
-      // renderLogs(finalBlowText);
     }
     if (this.hp.current <= 0) {
       this.hp.current = 0;
