@@ -1,3 +1,4 @@
+
 function $querySelector (value) {
   return document.querySelector(value)
 }
@@ -10,8 +11,6 @@ const $btnRessetGame = $querySelector('#btn-resset');
 
 const randomNumber = 12;
 const critHitNumber = 30;
-const defaultHP = 100;
-const demageHP = 100;
 
 const thunderJoltMaxClick = 12;
 const criticalHitMexClick = 3;
@@ -20,8 +19,10 @@ const criticalHitMexClick = 3;
 //********** Герои **********
 const character = {
   name: 'Pikachu',
-  defaultHP,
-  demageHP,
+  hp: {
+    current: 100,
+    total: 100
+  },
   elHP: $querySelector('#health-character'),
   elProgressBar: $querySelector('#progressbar-character'),
   renderHPLife,
@@ -33,8 +34,10 @@ const character = {
 
 const enemy = {
   name: 'Charmander',
-  defaultHP,
-  demageHP,
+  hp: {
+    current: 100,
+    total: 100 
+  },
   elHP: $querySelector('#health-enemy'),
   elProgressBar: $querySelector('#progressbar-enemy'),
   renderHPLife,
@@ -117,36 +120,36 @@ function renderHP () {
 }
 
 function renderHPLife () {
-  this.elHP.innerText = this.demageHP + ' / ' + this.defaultHP;
-  if (this.demageHP <= 80) {
+  this.elHP.innerText = this.hp.current + ' / ' + this.hp.total;
+  if (this.hp.current <= 80) {
     this.elHP.style.color = '#ffcc00';
   }
 
-  if (this.demageHP <= 29) {
+  if (this.hp.current <= 29) {
     this.elHP.style.color = '#d20000';
   }
 }
 
 function renderProgressBar () {
-  this.elProgressBar.style.width = this.demageHP + '%';
-  if (this.demageHP <= 80) {
+  this.elProgressBar.style.width = this.hp.current + '%';
+  if (this.hp.current <= 80) {
     this.elProgressBar.classList.add('low');
   }
 
-  if (this.demageHP <= 29) {
+  if (this.hp.current <= 29) {
     this.elProgressBar.classList.add('critical');
   }
 }
 
 
 function changeHP (count) {
-  this.demageHP -= count;
+  this.hp.current -= count;
 
   const log = this === enemy ? generateLog(this, character, count) : generateLog(this, enemy, count);
   renderLogs(log);
 
-  if (this.demageHP <= count) {
-    this.defaultHP = 0;
+  if (this.hp.current <= count) {
+    this.hp.current = 0;
     $btn.disabled = true;
   }
 
@@ -157,12 +160,12 @@ function changeHP (count) {
 function finalBlow (count) {
   const finalBlowText = this.name + ' Получил Критический удар!';
 
-  if (this.demageHP <= count) {
-    this.demageHP -= 10;
+  if (this.hp.current <= count) {
+    this.hp.current -= 10;
     renderLogs(finalBlowText);
   }
-  if (this.demageHP <= 0) {
-    this.demageHP = 0;
+  if (this.hp.current <= 0) {
+    this.hp.current = 0;
     $btnVolt.disabled = true;
   }
 
@@ -173,7 +176,7 @@ function finalBlow (count) {
 function kritPanchButtonActiv (count) {
   const kritPanchLogMessage = 'Можно применить Сritical Hit => ' + this.name;
 
-  if (this.demageHP <= count) {
+  if (this.hp.current <= count) {
     renderLogs(kritPanchLogMessage);
     $btnVolt.disabled = false;
     $btnVolt.style.background = '#ff0000';
@@ -191,52 +194,52 @@ function generateLog (firstPerson, secondPerson, demage) {
     `[${firstPerson.name}] вспомнил что-то важное, но неожиданно
     [${secondPerson.name}], не помня себя от испуга, ударил в предплечье врага.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] поперхнулся, и за это
     [${secondPerson.name}] с испугу приложил прямой удар коленом в лоб врага.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] забылся, но в это время наглый
     [${secondPerson.name}], приняв волевое решение, неслышно подойдя сзади, ударил.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] пришел в себя, но неожиданно
     [${secondPerson.name}] случайно нанес мощнейший удар.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] поперхнулся, но в это время
     [${secondPerson.name}] нехотя раздробил кулаком \<вырезанно цензурой\> противника.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] удивился, а
     [${secondPerson.name}] пошатнувшись влепил подлый удар.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] высморкался, но неожиданно
     [${secondPerson.name}]провел дробящий удар.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] пошатнулся, и внезапно наглый
     [${secondPerson.name}] беспричинно ударил в ногу противника
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] расстроился, как вдруг, неожиданно
     [${secondPerson.name}] случайно влепил стопой в живот соперника.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`,
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
     `[${firstPerson.name}] пытался что-то сказать, но вдруг, неожиданно
     [${secondPerson.name}] со скуки, разбил бровь сопернику.
     [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.demageHP} / ${firstPerson.defaultHP}]`
+    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`
   ];
 
   return logs[random(logs.length) - 1];
