@@ -1,3 +1,5 @@
+import Pokemon from './modules/pokemon.js'
+import random from './modules/randon.js'
 
 function $querySelector (value) {
   return document.querySelector(value)
@@ -6,48 +8,30 @@ const $btn = $querySelector('#btn-kick');
 const $btnVolt = $querySelector('#btn-volt');
 const $logs = $querySelector('#logs');
 const $btnRenderSkillJolt = $querySelector('.button__count-skill');
-const $btnRenderSkillHit = $querySelector('.button__volt-count')
-const $btnRessetGame = $querySelector('#btn-resset');
+const $btnRenderSkillHit = $querySelector('.button__volt-count');
+$btnVolt.disabled = true;
 
 const randomNumber = 12;
 const critHitNumber = 30;
-
 const thunderJoltMaxClick = 12;
 const criticalHitMexClick = 3;
 
 
 //********** Герои **********
-const character = {
+
+const player1 = new Pokemon ({
   name: 'Pikachu',
-  hp: {
-    current: 100,
-    total: 100
-  },
-  elHP: $querySelector('#health-character'),
-  elProgressBar: $querySelector('#progressbar-character'),
-  renderHPLife,
-  changeHP,
-  finalBlow,
-  renderProgressBar,
-  kritPanchButtonActiv
-}
+  type: 'electric',
+  hp: 100,
+  selectors: 'character'
+})
 
-const enemy = {
+const player2 = new Pokemon ({
   name: 'Charmander',
-  hp: {
-    current: 100,
-    total: 100 
-  },
-  elHP: $querySelector('#health-enemy'),
-  elProgressBar: $querySelector('#progressbar-enemy'),
-  renderHPLife,
-  changeHP,
-  finalBlow,
-  renderProgressBar,
-  kritPanchButtonActiv
-}
-
-// *********** HomeWork-4 ***********
+  type: 'fire',
+  hp: 100,
+  selectors: 'enemy'
+})
 
 function clickListener () {
   let counter = 0;
@@ -71,6 +55,7 @@ function renderButtonСountdown (number, element) {
   }
 }
 
+
 const renderButtonСountdownJolt = renderButtonСountdown(thunderJoltMaxClick, $btnRenderSkillJolt);
 const renderButtonCountdownHit = renderButtonСountdown(criticalHitMexClick, $btnRenderSkillHit);
 
@@ -79,175 +64,112 @@ const countListenerHit = clickListener();
 
 // *********** События ***********
 $btn.addEventListener('click', function () {
-  character.changeHP(random(randomNumber));
-  enemy.changeHP(random(randomNumber));
+  player1.changeHP(random(randomNumber),function (count){
+      const log = generateLog(player2, player1, count);
+      renderLogs(log);
+    });
+  player2.changeHP(random(randomNumber),function (count){
+      const log = generateLog(player1, player2, count);
+      renderLogs(log);
+    });
 
-  character.kritPanchButtonActiv(critHitNumber);
-  enemy.kritPanchButtonActiv(critHitNumber);
+  player1.kritPanchButtonActiv(critHitNumber, $btnVolt, function (count) {
+    renderLogs(count);
+  });
+  player2.kritPanchButtonActiv(critHitNumber, $btnVolt, function (count) {
+    renderLogs(count);
+  });
 
   countListenerJolt(thunderJoltMaxClick, $btn);
   renderButtonСountdownJolt();
 });
 
 $btnVolt.addEventListener('click', function () {
-  character.finalBlow(critHitNumber);
-  enemy.finalBlow(critHitNumber);
+  player1.changeHP(random(randomNumber),
+    function (count){
+      const log = generateLog(player2, player1, count);
+      renderLogs(log);
+    });
+  player2.changeHP(random(randomNumber),
+    function (count){
+      const log = generateLog(player1, player2, count);
+      renderLogs(log);
+    });
+    player1.finalBlow(critHitNumber, $btnVolt, function (count) {
+      renderLogs(count);
+    });
+    player2.finalBlow(critHitNumber, $btnVolt, function (count) {
+      renderLogs(count);
+    });
 
   countListenerHit(criticalHitMexClick, $btnVolt);
   renderButtonCountdownHit();
 });
 
-
-//*********** init app ***********
-function init () {
-  console.log('Start Game!');
-  $btnVolt.disabled = true; // Блокируем кнопку крит удара!
-
-  character.renderHPLife();
-  character.renderProgressBar();
-  
-  enemy.renderHPLife();
-  enemy.renderProgressBar();
-}
-
-// правда в этом блоке пришлось вызвать несколько раз функцию, но зато на this.
-function renderHP () {
-  character.renderHPLife();
-  enemy.renderHPLife();
-
-  character.renderProgressBar();
-  enemy.renderProgressBar();
-}
-
-function renderHPLife () {
-  this.elHP.innerText = this.hp.current + ' / ' + this.hp.total;
-  if (this.hp.current <= 80) {
-    this.elHP.style.color = '#ffcc00';
-  }
-
-  if (this.hp.current <= 29) {
-    this.elHP.style.color = '#d20000';
-  }
-}
-
-function renderProgressBar () {
-  this.elProgressBar.style.width = this.hp.current + '%';
-  if (this.hp.current <= 80) {
-    this.elProgressBar.classList.add('low');
-  }
-
-  if (this.hp.current <= 29) {
-    this.elProgressBar.classList.add('critical');
-  }
-}
-
-
-function changeHP (count) {
-  this.hp.current -= count;
-
-  const log = this === enemy ? generateLog(this, character, count) : generateLog(this, enemy, count);
-  renderLogs(log);
-
-  if (this.hp.current <= count) {
-    this.hp.current = 0;
-    $btn.disabled = true;
-  }
-
-  renderHP();
-}
-
-// ********** Функция критического удара **********
-function finalBlow (count) {
-  const finalBlowText = this.name + ' Получил Критический удар!';
-
-  if (this.hp.current <= count) {
-    this.hp.current -= 10;
-    renderLogs(finalBlowText);
-  }
-  if (this.hp.current <= 0) {
-    this.hp.current = 0;
-    $btnVolt.disabled = true;
-  }
-
-  renderHP();
-}
-
-// ********** Функция вешает стили на коку и активирует ее когда можно применить критический удар **********
-function kritPanchButtonActiv (count) {
-  const kritPanchLogMessage = 'Можно применить Сritical Hit => ' + this.name;
-
-  if (this.hp.current <= count) {
-    renderLogs(kritPanchLogMessage);
-    $btnVolt.disabled = false;
-    $btnVolt.style.background = '#ff0000';
-    $btnVolt.style.color = '#ffffff';
-  }
-}
-
-function random (num) {
-  return Math.ceil(Math.random() * num);
-}
-
-
 function generateLog (firstPerson, secondPerson, demage) {
-    const logs = [
-    `[${firstPerson.name}] вспомнил что-то важное, но неожиданно
-    [${secondPerson.name}], не помня себя от испуга, ударил в предплечье врага.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  const logs = [
+  `[${firstPerson.name}] вспомнил что-то важное, но неожиданно
+  [${secondPerson.name}], не помня себя от испуга, ударил в предплечье врага.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] поперхнулся, и за это
-    [${secondPerson.name}] с испугу приложил прямой удар коленом в лоб врага.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] поперхнулся, и за это
+  [${secondPerson.name}] с испугу приложил прямой удар коленом в лоб врага.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] забылся, но в это время наглый
-    [${secondPerson.name}], приняв волевое решение, неслышно подойдя сзади, ударил.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] забылся, но в это время наглый
+  [${secondPerson.name}], приняв волевое решение, неслышно подойдя сзади, ударил.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] пришел в себя, но неожиданно
-    [${secondPerson.name}] случайно нанес мощнейший удар.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] пришел в себя, но неожиданно
+  [${secondPerson.name}] случайно нанес мощнейший удар.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] поперхнулся, но в это время
-    [${secondPerson.name}] нехотя раздробил кулаком \<вырезанно цензурой\> противника.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] поперхнулся, но в это время
+  [${secondPerson.name}] нехотя раздробил кулаком \<вырезанно цензурой\> противника.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] удивился, а
-    [${secondPerson.name}] пошатнувшись влепил подлый удар.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] удивился, а
+  [${secondPerson.name}] пошатнувшись влепил подлый удар.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] высморкался, но неожиданно
-    [${secondPerson.name}]провел дробящий удар.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] высморкался, но неожиданно
+  [${secondPerson.name}]провел дробящий удар.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] пошатнулся, и внезапно наглый
-    [${secondPerson.name}] беспричинно ударил в ногу противника
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] пошатнулся, и внезапно наглый
+  [${secondPerson.name}] беспричинно ударил в ногу противника
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] расстроился, как вдруг, неожиданно
-    [${secondPerson.name}] случайно влепил стопой в живот соперника.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
+  `[${firstPerson.name}] расстроился, как вдруг, неожиданно
+  [${secondPerson.name}] случайно влепил стопой в живот соперника.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`,
 
-    `[${firstPerson.name}] пытался что-то сказать, но вдруг, неожиданно
-    [${secondPerson.name}] со скуки, разбил бровь сопернику.
-    [${firstPerson.name}] получил -[${demage}] HP
-    [${firstPerson.hp.current} / ${firstPerson.hp.total}]`
-  ];
+  `[${firstPerson.name}] пытался что-то сказать, но вдруг, неожиданно
+  [${secondPerson.name}] со скуки, разбил бровь сопернику.
+  [${firstPerson.name}] получил -[${demage}] HP
+  [${firstPerson.hp.current} / ${firstPerson.hp.total}]`
+];
 
   return logs[random(logs.length) - 1];
 }
 
+
+// function random (num) {
+//   return Math.ceil(Math.random() * num);
+// }
+
 // ************ render logs ************
 
-const renderLogs = function (log) {
+function renderLogs (log) {
   for (let i = 0; i < 1; i++) {
     const $p = document.createElement('p');
     $p.classList.add('logs__text')
@@ -255,5 +177,3 @@ const renderLogs = function (log) {
     $logs.insertBefore($p, $logs.children[0]);
   }
 }
-
-init();
