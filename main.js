@@ -10,10 +10,10 @@ const $control = document.querySelector('.control');
 
 
 //********** Герои **********
-let randomNamePlayer1 = random(5);
+let randomNamePlayer1 = random(pokemons.length - 1);
 const randomPlayer1 = pokemons.find(item => item.name === pokemons[randomNamePlayer1].name);
 
-let randomNamePlayer2 = random(5);
+let randomNamePlayer2 = random(pokemons.length - 1);
 const randomPlayer2 = pokemons.find(item => item.name === pokemons[randomNamePlayer2].name)
 
 let player1 = new Pokemon ({
@@ -39,9 +39,14 @@ $elNamePlayer1.innerText = player1.name;
 $elNamePlayer2.innerText = player2.name;
 
 const finalGame = function (player1, player2) {
+  const allButtons = document.querySelectorAll('.control .button');
+  const $GameOver = document.createElement('h2');
+
   if (player1 === 0 || player2 === 0) {
-    const allButtons = document.querySelectorAll('.control .button');
     allButtons.forEach($item => $item.remove());
+    $GameOver.innerText = 'GameOver!';
+
+    $control.appendChild($GameOver);
   }
 }
 
@@ -70,7 +75,7 @@ player1.attacks.forEach(item => {
       })
     }, 1500)
     renderButtonCountdown();
-    clickCount();;
+    clickCount();
   })
   $control.appendChild($btn);
 });

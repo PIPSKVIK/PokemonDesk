@@ -3,6 +3,10 @@ function renderButtonСountdown (number, element) {
   return function () {
     count -= 1;
     element.innerText = `[${count}]`;
+    
+    if (count === 0) {
+      element.disabled = true;
+    }
   }
 }
 
