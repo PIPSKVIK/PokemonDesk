@@ -39,9 +39,10 @@ body {
     height: 260px;
     position: relative;
     margin: 20px;
-    display: flex;
-    justify-content: center;
     align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .playground {
@@ -271,15 +272,12 @@ body {
     border: 2px solid #ffc55b;
     border-radius: 10px;
     min-height: 30px;
+    width: 48%;
     vertical-align: middle;
     padding: 12px 20px;
     outline: none !important;
     cursor: pointer;
     font-size: 18px;
-}
-
-.button__volt {
-    margin-left: 20px;
 }
 
 .button:after {
@@ -510,4 +508,20 @@ h1 {
     padding: 5px;
     text-align: start;
     background: rgba(47, 82, 236, 0.5);
+}
+
+.render-log__first-person {
+  color: #ffc400;
+}
+
+.render-log__second-person {
+  color: #274600;
+}
+
+.render-log__first-demage {
+  color: #b60000;
+}
+
+.render-log__first-hp {
+  color: #008000;
 }

@@ -4,7 +4,7 @@ function renderLogs (log) {
   for (let i = 0; i < 1; i++) {
     const $p = document.createElement('p');
     $p.classList.add('logs__text')
-    $p.innerText = `${log}`;
+    $p.innerHTML = `${log}`;
     $logs.insertBefore($p, $logs.children[0]);
   }
 }
