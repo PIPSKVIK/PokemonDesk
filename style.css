@@ -481,6 +481,14 @@ h1 {
 
 /* Мои стили */
 
+.button-start {
+    width: auto;
+}
+
+.button-gameover {
+    display: none;
+}
+
 .logs {
     max-width: 600px;
     height: 250px;

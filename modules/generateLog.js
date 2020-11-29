@@ -1,4 +1,4 @@
-import random from './randon.js';
+import { random } from './utils.js';
 
 function generateLog (firstPerson, secondPerson, demage, skill) {
   const logs = [
