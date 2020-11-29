@@ -16,21 +16,12 @@ $control.style.display = 'none';
 $pokemonPlayer1.style.display = 'none';
 $pokemonPlayer2.style.display = 'none';
 
-$buttonStartGame.addEventListener('click', () => {
-  $control.style.display = 'inherit';
-  $pokemonPlayer1.style.display = 'inherit';
-  $pokemonPlayer2.style.display = 'inherit';
-
-  $buttonStartGame.style.display = 'none';
-})
-
-
 //********** Герои **********
 let randomNamePlayer1 = random(pokemons.length - 1);
 const randomPlayer1 = pokemons.find(item => item.name === pokemons[randomNamePlayer1].name);
 
 let randomNamePlayer2 = random(pokemons.length - 1);
-const randomPlayer2 = pokemons.find(item => item.name === pokemons[randomNamePlayer2].name)
+const randomPlayer2 = pokemons.find(item => item.name === pokemons[randomNamePlayer2].name);
 
 let player1 = new Pokemon ({
   ...randomPlayer1,
@@ -67,6 +58,14 @@ const finalGame = (player1, player2) => {
   }
 }
 
+$buttonStartGame.addEventListener('click', () => {
+  $control.style.display = 'inherit';
+  $pokemonPlayer1.style.display = 'inherit';
+  $pokemonPlayer2.style.display = 'inherit';
+
+  $buttonStartGame.style.display = 'none';
+})
+
 player1.attacks.forEach(item => {
   const $btn = document.createElement('button');
   const $span = document.createElement('span');
@@ -98,3 +97,4 @@ player1.attacks.forEach(item => {
   $btn.appendChild($span);
   $span.innerText = '[' + item.maxCount + ']';
 });
+
