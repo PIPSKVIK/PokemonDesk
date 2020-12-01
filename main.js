@@ -89,8 +89,12 @@ class Game {
     $elNamePlayer2.innerText = player2.name;
 
     const finalGame = (player1, player2) => {
+
       const allButtons = document.querySelectorAll('.control .button');
       const $GameOver = document.createElement('div');
+      const $resetBtn = document.createElement('button');
+      $resetBtn.classList.add('button');
+      $resetBtn.innerText = 'Resset';
     
       if (player1.hp.current === 0 || player2.hp.current === 0) {
         allButtons.forEach($item => $item.remove());
@@ -102,6 +106,13 @@ class Game {
           <h3 class="render-log__second-person">${player2.name} / ${player2.hp.current}</h3>
           `;
         $control.appendChild($GameOver);
+        $control.appendChild($resetBtn);
+
+        $resetBtn.addEventListener('click', () => {
+          game.start();
+          $GameOver.remove();
+          $resetBtn.remove();
+        });
       }
     }
   }
@@ -109,4 +120,5 @@ class Game {
 
 const game = new Game();
 game.start();
+
 
