@@ -528,6 +528,7 @@ h1 {
 
 .render-log__first-demage {
   color: #b60000;
+  text-transform: uppercase;
 }
 
 .render-log__first-hp {

@@ -15,15 +15,6 @@ $control.style.display = 'none';
 $pokemonPlayer1.style.display = 'none';
 $pokemonPlayer2.style.display = 'none';
 
-$buttonStartGame.addEventListener('click', () => {
-  $control.style.display = 'inherit';
-  $pokemonPlayer1.style.display = 'inherit';
-  $pokemonPlayer2.style.display = 'inherit';
-  $buttonStartGame.style.display = 'none';
-
-  renderLogs(`---Game Start---`);
-})
-
 
 class Game {
   getRandomPokemons = async () => {
@@ -88,13 +79,32 @@ class Game {
     $elNamePlayer1.innerText = player1.name;
     $elNamePlayer2.innerText = player2.name;
 
+    $buttonStartGame.addEventListener('click', () => {
+      $control.style.display = 'inherit';
+      $pokemonPlayer1.style.display = 'inherit';
+      $pokemonPlayer2.style.display = 'inherit';
+      $buttonStartGame.style.display = 'none';
+    
+      renderLogs(`
+        <div style="text-align: center;">
+          <span>--Start Game--</span>
+          <br>
+          <span>Сражение начинают:</span>
+          <br>
+          <span class="render-log__first-demage">${player1.name}</span> / ${player1.hp.current}-HP
+          vs 
+          <span class="render-log__first-demage">${player2.name}</span> / ${player2.hp.current}-HP
+        </div>
+      `);
+    })
+
     const finalGame = (player1, player2) => {
 
       const allButtons = document.querySelectorAll('.control .button');
       const $GameOver = document.createElement('div');
       const $resetBtn = document.createElement('button');
       $resetBtn.classList.add('button');
-      $resetBtn.innerText = 'Resset';
+      $resetBtn.innerText = 'Restart Game';
     
       if (player1.hp.current === 0 || player2.hp.current === 0) {
         allButtons.forEach($item => $item.remove());
@@ -112,6 +122,14 @@ class Game {
           game.start();
           $GameOver.remove();
           $resetBtn.remove();
+
+          const $health = document.querySelector('#progressbar-player1');
+          $health.classList.remove('low');
+          $health.classList.remove('critical');
+
+          const $health2 = document.querySelector('#progressbar-player2');
+          $health2.classList.remove('low');
+          $health2.classList.remove('critical');
         });
       }
     }
