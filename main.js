@@ -1,6 +1,6 @@
 import generateLog from './modules/generateLog.js';
 import Pokemon from './modules/pokemon.js';
-import { random, renderLogs, renderButtonСountdown, clickListener } from './modules/utils.js';
+import { renderLogs, renderButtonСountdown, clickListener } from './modules/utils.js';
 
 const $control = document.querySelector('.control');
 const $buttonStartGame = document.querySelector('.button-start');
