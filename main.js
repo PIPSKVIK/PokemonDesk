@@ -1,7 +1,6 @@
 import generateLog from './modules/generateLog.js';
 import Pokemon from './modules/pokemon.js';
-import { random, renderLogs, renderButtonСountdown, clickListener } from './modules/utils.js'
-import { pokemons } from './modules/pokemons.js';
+import { random, renderLogs, renderButtonСountdown, clickListener } from './modules/utils.js';
 
 const $control = document.querySelector('.control');
 const $buttonStartGame = document.querySelector('.button-start');
@@ -16,45 +15,92 @@ $control.style.display = 'none';
 $pokemonPlayer1.style.display = 'none';
 $pokemonPlayer2.style.display = 'none';
 
-//********** Герои **********
-let randomNamePlayer1 = random(pokemons.length - 1);
-const randomPlayer1 = pokemons.find(item => item.name === pokemons[randomNamePlayer1].name);
 
-let randomNamePlayer2 = random(pokemons.length - 1);
-const randomPlayer2 = pokemons.find(item => item.name === pokemons[randomNamePlayer2].name);
+class Game {
+  getPokemons = async () => {
+    const respons = await fetch('https://reactmarathon-api.netlify.app/api/pokemons');
+    const pokemons = await respons.json();
+    return pokemons
+  }
 
-let player1 = new Pokemon ({
-  ...randomPlayer1,
-  selectors: 'player1'
-});
+  start = async () => {
+    const pokemons = await this.getPokemons();
 
-let player2 = new Pokemon ({
-  ...randomPlayer2,
-  selectors: 'player2'
-});
+    let randomNamePlayer1 = random(pokemons.length - 1);
+    const randomPlayer1 = pokemons.find(item => item.name === pokemons[randomNamePlayer1].name);
 
-// *********** События ***********
+    let randomNamePlayer2 = random(pokemons.length - 1);
+    const randomPlayer2 = pokemons.find(item => item.name === pokemons[randomNamePlayer2].name);
 
-$elImgPlayer1.src = player1.img;
-$elImgPlayer2.src = player2.img;
+    let player1 = new Pokemon ({
+      ...randomPlayer1,
+      selectors: 'player1'
+    });
 
-$elNamePlayer1.innerText = player1.name;
-$elNamePlayer2.innerText = player2.name;
+    let player2 = new Pokemon ({
+      ...randomPlayer2,
+      selectors: 'player2'
+    });
 
-const finalGame = (player1, player2) => {
-  const allButtons = document.querySelectorAll('.control .button');
-  const $GameOver = document.createElement('div');
+    player1.attacks.forEach(item => {
+      const $btn = document.createElement('button');
+      const $span = document.createElement('span');
+      const clickCount = clickListener(item.maxCount, $btn);
+      const renderButtonCountdown = renderButtonСountdown(item.maxCount, $span, $btn);
+    
+      $btn.classList.add('button');
+      $btn.innerText = item.name;
+    
+      $btn.addEventListener('click', () => {
+        let demagePlayer1 = item.minDamage
+        let demagePlayer2 = item.maxDamage
 
-  if (player1.hp.current === 0 || player2.hp.current === 0) {
-    allButtons.forEach($item => $item.remove());
-    $GameOver.innerHTML = `
-      <h2 class="render-log__first-demage">Game Over:</h2>
-      <br>
-      <h3 class="render-log__first-hp">${player1.name} / ${player1.hp.current}</h3>
-      <br>
-      <h3 class="render-log__second-person">${player2.name} / ${player2.hp.current}</h3>
-      `;
-    $control.appendChild($GameOver);
+        setTimeout(() => {
+          player1.changeHP(demagePlayer1, function (demagePlayer1){
+            const log = generateLog(player1, player2, demagePlayer1, item.name);
+            renderLogs(log);
+          });
+        }, 500)
+
+        setTimeout(() => {
+          player2.changeHP(demagePlayer2,function (demagePlayer2){
+            const log = generateLog(player2, player1, demagePlayer2, item.name);
+            renderLogs(log);
+            finalGame(player1, player2);
+          });
+        }, 1000)
+
+        renderButtonCountdown();
+        clickCount();
+      })
+
+      $control.appendChild($btn);
+      $btn.appendChild($span);
+      $span.innerText = '[' + item.maxCount + ']';
+    });
+
+    $elImgPlayer1.src = player1.img;
+    $elImgPlayer2.src = player2.img;
+
+    $elNamePlayer1.innerText = player1.name;
+    $elNamePlayer2.innerText = player2.name;
+
+    const finalGame = (player1, player2) => {
+      const allButtons = document.querySelectorAll('.control .button');
+      const $GameOver = document.createElement('div');
+    
+      if (player1.hp.current === 0 || player2.hp.current === 0) {
+        allButtons.forEach($item => $item.remove());
+        $GameOver.innerHTML = `
+          <h2 class="render-log__first-demage">Game Over:</h2>
+          <br>
+          <h3 class="render-log__first-hp">${player1.name} / ${player1.hp.current}</h3>
+          <br>
+          <h3 class="render-log__second-person">${player2.name} / ${player2.hp.current}</h3>
+          `;
+        $control.appendChild($GameOver);
+      }
+    }
   }
 }
 
@@ -66,35 +112,6 @@ $buttonStartGame.addEventListener('click', () => {
   $buttonStartGame.style.display = 'none';
 })
 
-player1.attacks.forEach(item => {
-  const $btn = document.createElement('button');
-  const $span = document.createElement('span');
-  const clickCount = clickListener(item.maxCount, $btn);
-  const renderButtonCountdown = renderButtonСountdown(item.maxCount, $span, $btn);
-
-  $btn.classList.add('button');
-  $btn.innerText = item.name;
-
-  $btn.addEventListener('click', () => {
-    let randomMinDemage = random(item.minDamage);
-    setTimeout(() => {
-      player1.changeHP(random(randomMinDemage),function (randomMinDemage){
-        const log = generateLog(player1, player2, randomMinDemage, item.name);
-        renderLogs(log);
-      });
-    }, 500)
-    setTimeout(() => {
-      player2.changeHP(random(randomMinDemage),function (randomMinDemage){
-        const log = generateLog(player2, player1, randomMinDemage, item.name);
-        renderLogs(log);
-        finalGame(player1, player2);
-      });
-    }, 1000)
-    renderButtonCountdown();
-    clickCount();
-  })
-  $control.appendChild($btn);
-  $btn.appendChild($span);
-  $span.innerText = '[' + item.maxCount + ']';
-});
+const game = new Game();
+game.start();
 
