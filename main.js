@@ -19,8 +19,9 @@ $buttonStartGame.addEventListener('click', () => {
   $control.style.display = 'inherit';
   $pokemonPlayer1.style.display = 'inherit';
   $pokemonPlayer2.style.display = 'inherit';
-
   $buttonStartGame.style.display = 'none';
+
+  renderLogs(`---Game Start---`);
 })
 
 
