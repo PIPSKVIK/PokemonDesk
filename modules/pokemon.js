@@ -6,7 +6,7 @@ class Selectors {
 }
 
 class Pokemon extends Selectors {
-  constructor({ name, hp, type, selectors }) {
+  constructor({ name, hp, type, selectors, attacks, img }) {
     super(selectors);
 
     this.name = name;
@@ -15,11 +15,13 @@ class Pokemon extends Selectors {
       total: hp
     },
     this.type = type;
+    this.attacks = attacks;
+    this.img = img;
 
     this.renderHP();
   }
 
-  changeHP = (count, cd, btn1, btn2) => {
+  changeHP = (count, cd) => {
     this.hp.current -= count;
   
     if (this.hp.current <= count) {
@@ -53,36 +55,13 @@ class Pokemon extends Selectors {
     const procent = current / (total / 100);
   
     elProgressBar.style.width = procent + '%';
-    if (current <= 80) {
+    if (procent <= 50) {
       elProgressBar.classList.add('low');
     }
   
-    if (current <= 29) {
+    if (procent <= 29) {
       elProgressBar.classList.add('critical');
     }
-  }
-
-  kritPanchButtonActiv = (count, btn) =>  {
-    const { hp: { current } } = this;
-  
-    if (current <= count) {
-      btn.disabled = false;
-      btn.style.background = '#ff0000';
-      btn.style.color = '#ffffff';
-    }
-  }
-
-    finalBlow = (count, btn) => {
-
-    if (this.hp.current <= count) {
-      this.hp.current -= 10;
-    }
-    if (this.hp.current <= 0) {
-      this.hp.current = 0;
-      btn.disabled = true;
-    }
-
-    this.renderHP();
   }
 }
 
