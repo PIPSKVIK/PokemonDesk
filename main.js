@@ -15,30 +15,33 @@ $control.style.display = 'none';
 $pokemonPlayer1.style.display = 'none';
 $pokemonPlayer2.style.display = 'none';
 
+$buttonStartGame.addEventListener('click', () => {
+  $control.style.display = 'inherit';
+  $pokemonPlayer1.style.display = 'inherit';
+  $pokemonPlayer2.style.display = 'inherit';
+
+  $buttonStartGame.style.display = 'none';
+})
+
 
 class Game {
-  getPokemons = async () => {
-    const respons = await fetch('https://reactmarathon-api.netlify.app/api/pokemons');
-    const pokemons = await respons.json();
-    return pokemons
+  getRandomPokemons = async () => {
+    const respons = await fetch('https://reactmarathon-api.netlify.app/api/pokemons?random=true');
+    const randomPokemons = await respons.json();
+    return randomPokemons
   }
 
   start = async () => {
-    const pokemons = await this.getPokemons();
-
-    let randomNamePlayer1 = random(pokemons.length - 1);
-    const randomPlayer1 = pokemons.find(item => item.name === pokemons[randomNamePlayer1].name);
-
-    let randomNamePlayer2 = random(pokemons.length - 1);
-    const randomPlayer2 = pokemons.find(item => item.name === pokemons[randomNamePlayer2].name);
+    const randomPokemonsPlayer1 = await this.getRandomPokemons();
+    const randomPokemonsPlayer2 = await this.getRandomPokemons();
 
     let player1 = new Pokemon ({
-      ...randomPlayer1,
+      ...randomPokemonsPlayer1,
       selectors: 'player1'
     });
 
     let player2 = new Pokemon ({
-      ...randomPlayer2,
+      ...randomPokemonsPlayer2,
       selectors: 'player2'
     });
 
@@ -81,7 +84,6 @@ class Game {
 
     $elImgPlayer1.src = player1.img;
     $elImgPlayer2.src = player2.img;
-
     $elNamePlayer1.innerText = player1.name;
     $elNamePlayer2.innerText = player2.name;
 
@@ -103,14 +105,6 @@ class Game {
     }
   }
 }
-
-$buttonStartGame.addEventListener('click', () => {
-  $control.style.display = 'inherit';
-  $pokemonPlayer1.style.display = 'inherit';
-  $pokemonPlayer2.style.display = 'inherit';
-
-  $buttonStartGame.style.display = 'none';
-})
 
 const game = new Game();
 game.start();
