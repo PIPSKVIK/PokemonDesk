@@ -102,6 +102,7 @@ class Game {
 
       const allButtons = document.querySelectorAll('.control .button');
       const $GameOver = document.createElement('div');
+      $GameOver.classList.add('render-log__wrapper');
       const $resetBtn = document.createElement('button');
       $resetBtn.classList.add('button');
       $resetBtn.innerText = 'Restart Game';
@@ -109,7 +110,7 @@ class Game {
       if (player1.hp.current === 0 || player2.hp.current === 0) {
         allButtons.forEach($item => $item.remove());
         $GameOver.innerHTML = `
-          <h2 class="render-log__first-demage">Game Over:</h2>
+          <h2 class="render-log__gameover">Game Over:</h2>
           <br>
           <h3 class="render-log__first-hp">${player1.name} / ${player1.hp.current}</h3>
           <br>
@@ -117,6 +118,7 @@ class Game {
           `;
         $control.appendChild($GameOver);
         $control.appendChild($resetBtn);
+        $control.style.display = 'block';
 
         $resetBtn.addEventListener('click', () => {
           game.start();
