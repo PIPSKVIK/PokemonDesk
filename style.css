@@ -524,12 +524,16 @@ h1 {
 
 .render-log__second-person {
   color: #274600;
+  margin: 0;
 }
 
 .render-log__first-demage {
   color: #b60000;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 .render-log__first-hp {
   color: #008000;
+  margin: 0;
 }

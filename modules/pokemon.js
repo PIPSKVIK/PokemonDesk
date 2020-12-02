@@ -39,15 +39,8 @@ class Pokemon extends Selectors {
   
   renderHPLife = () => {
     const { elHP, hp: { current, total } } = this;
-  
+
     elHP.innerText = current + ' / ' + total;
-    if (current <= 80) {
-      elHP.style.color = '#ffcc00';
-    }
-  
-    if (current <= 29) {
-      elHP.style.color = '#d20000';
-    }
   }
   
   renderProgressBar = () => {
