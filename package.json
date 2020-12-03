@@ -1,0 +1,30 @@
+{
+  "name": "PokemonDesk",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PIPSKVIK/PokemonDesk.git"
+  },
+  "keywords": [],
+  "author": "Aleksandr Milovanov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PIPSKVIK/PokemonDesk/issues"
+  },
+  "homepage": "https://github.com/PIPSKVIK/PokemonDesk#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.7",
+    "babel-loader": "^8.2.2",
+    "webpack": "^4.32.2",
+    "webpack-cli": "^3.3.0",
+    "webpack-dev-server": "^3.11.0"
+  }
+}
