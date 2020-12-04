@@ -499,17 +499,6 @@ h1 {
     position: relative;
 }
 
-.logs::before {
-    content: 'Лог Боя';
-    position: absolute;
-    top: 0;
-    right: 10px;
-    color: #073fa7;
-    font-size: 20px;
-    font-weight: bold;
-    font-style: italic;
-}
-
 .logs__text {
     font-size: 12px;
     margin: 5px 0;
@@ -524,16 +513,35 @@ h1 {
 
 .render-log__second-person {
   color: #274600;
-  margin: 0;
 }
 
 .render-log__first-demage {
   color: #b60000;
-  text-transform: uppercase;
-  margin: 0;
 }
 
 .render-log__first-hp {
   color: #008000;
-  margin: 0;
+}
+
+/* ------------------------ */
+
+.render-log__wrapper {
+    margin-bottom: 45px;
+}
+
+.render-log__game-over {
+    color: #ff0000;
+    text-transform: uppercase;
+    font-size: 48px;
+    margin: 0;
+}
+
+.render-log__first-player {
+    margin: 0;
+    color: #073fa7;
+}
+
+.render-log__second-player {
+    margin: 0;
+    color: #008000;
 }

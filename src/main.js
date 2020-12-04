@@ -110,11 +110,11 @@ class Game {
       if (player1.hp.current === 0 || player2.hp.current === 0) {
         allButtons.forEach($item => $item.remove());
         $GameOver.innerHTML = `
-          <h2 class="render-log__gameover">Game Over:</h2>
+          <h2 class="render-log__game-over">Game Over</h2>
           <br>
-          <h3 class="render-log__first-hp">${player1.name} / ${player1.hp.current}</h3>
+          <h3 class="render-log__first-player">${player1.name} / ${player1.hp.current}</h3>
           <br>
-          <h3 class="render-log__second-person">${player2.name} / ${player2.hp.current}</h3>
+          <h3 class="render-log__second-player">${player2.name} / ${player2.hp.current}</h3>
           `;
         $control.appendChild($GameOver);
         $control.appendChild($resetBtn);
@@ -132,6 +132,7 @@ class Game {
           const $health2 = document.querySelector('#progressbar-player2');
           $health2.classList.remove('low');
           $health2.classList.remove('critical');
+          $control.style.display = 'inherit';
         });
       }
     }
